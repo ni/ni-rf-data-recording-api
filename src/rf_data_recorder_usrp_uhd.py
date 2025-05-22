@@ -308,7 +308,7 @@ def main():
         )
 
         # check for mistakes
-        assert meta.validate()
+        meta.validate()
 
         ## Write Meta Data to file
         dataset_meta_filename = rx_data_file_name + ".sigmf-meta"
