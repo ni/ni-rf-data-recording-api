@@ -212,7 +212,7 @@ def write_rx_recorded_data_in_sigmf(rx_data, rx_args, txs_args, general_config, 
     )
 
     # Check for mistakes
-    assert meta.validate()
+    meta.validate()
 
     ## Write Meta Data to file
     dataset_meta_filename = rx_data_file_name + ".sigmf-meta"
