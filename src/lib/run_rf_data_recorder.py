@@ -170,6 +170,11 @@ def rf_data_recorder(rx_args, txs_args, general_config, rx_data_nbytes_que):
             colored(time_elapsed_ms, "yellow"),
             "ms",
         )
+
+        if sync_settings.external_stop_rx_data_acquisition_called:
+            break
+        time.sleep(general_config.dwell_time)
+
     rx_data_nbytes_que.put(rx_data_nbytes)
 
     # Send command to TX thread to stop data transmission
@@ -179,3 +184,6 @@ def rf_data_recorder(rx_args, txs_args, general_config, rx_data_nbytes_que):
         if start_ud_execution_called:
             run_mmWave_device.deinit_mmwave_device(mmwave_up_down_converter_parameters.serial_number)
         run_mmWave_device.deinit_mmwave_device(mmwave_antenna_array_parameters.serial_number)
+
+    # disable the flag
+    sync_settings.start_rx_data_acquisition_called = False
