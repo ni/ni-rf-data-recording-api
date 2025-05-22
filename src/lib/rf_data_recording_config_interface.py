@@ -101,9 +101,14 @@ def get_device_variations_config_dict(device_variations_config_dict, RFmode, var
                 raise Exception("ERROR: Unknown RF Mode of given device or wrong config")
 
             # get device arguments
-            variations_dict[device_id + "_args"] = [
-                "type=" + device_config["type"] + ",addr=" + device_config["IPaddress"]
-            ]
+            args = ""
+            known_args = {"type", "IPaddress", "addr", "name", "serial", "resource", "vid", "pid",
+                          "recv_frame_size", "num_recv_frames", "recv_buff_size",
+                          "send_frame_size", "num_send_frames", "send_buff_size"}
+            for key in set(device_config.keys()) & known_args:
+                args += f"{key}={device_config[key]},"
+            args = args.replace("IPaddress=", "addr=")
+            variations_dict[device_id + "_args"] = [args]
 
             # get device config parameters
             parameters = device_config["Parameters"]
