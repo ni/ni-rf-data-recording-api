@@ -485,22 +485,7 @@ The following tree shows the RF Data Recording API repository structure:
 ---
 
 ## Contributing
-The users and developers can contribute by adding more features or optimize the code. However, they should follow the following procedure:
-- Create a branch for the new feature.
-- Test API code after your changes.
-- Create a Pull Request. Your Pull Request should have the following info:
-    - **Summary**: Briefly summarize your changes and the motivation behind them in one or two sentences.
-    - **Detailed Description**: Provide information about the nature of your changes.
-    - **Affected Components**: List the core components of the system that are affected by your changes.
-    - **Additional Testing/Validation**: Please specify whether there were additional (manual) tests done. Please also specify the configurations/systems used to run these tests.
-    - **Checklist**: 
-        - [ ] Revert Scripts without functional changes.
-        - [ ] (Python) Reformat your code using Black.
-        - [ ] Document your code.
-        - [ ] Remove all debug code.
-        - [ ] Functional changes are tested.
-- Your request needs to be approved by repository admin.
-- If your Pull Request is accepted, it will be merged then to the main branch.
+Contributions are welcome. Please follow the guidelines in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Note: Maintenance of this Git repository will be done on best effort basis.
 
