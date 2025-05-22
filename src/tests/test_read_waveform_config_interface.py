@@ -38,9 +38,9 @@ if __name__ == "__main__":
                 # nr
                 self.waveform_generator = "5gnr_ni_rfmx_rfws"
                 self.waveform_file_name = (
-                    "NR_FR1_DL_FDD_SISO_BW-10MHz_CC-1_SCS-30kHz_OFDM_TM2"
+                    "5GNR_FR1_DL_FDD_SISO_BW-10MHz_CC-1_SCS-30kHz_TM2"
                 )
-                # self.waveform_file_name = "NR_FR1_UL_All_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_enabled_PTRS"
+                # self.waveform_file_name = "5GNR_FR1_UL_All_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_enabled_PTRS"
                 self.waveform_path = "waveforms/nr/"
                 # "possible values: tdms, matlab_ieee, matlab, type = str ",
                 self.waveform_format = "tdms"
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             elif standard == "radar":
                 # radar
                 self.waveform_generator = "radar_nist"
-                self.waveform_file_name = "RadarWaveform_BW_2M"
+                self.waveform_file_name = "Radar_Waveform_BW_2M"
                 self.waveform_path = "waveforms/radar/"
                 # "possible values: tdms, matlab_ieee, matlab, type = str ",
                 self.waveform_format = "matlab"

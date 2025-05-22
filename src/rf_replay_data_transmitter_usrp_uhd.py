@@ -110,7 +110,7 @@ def parse_args():
     parser.add_argument(
         "-fl",
         "--file",
-        default=("NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1"),
+        default=("5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1"),
         type=str,
         help="waveform file name or a folder name without extension",
     )

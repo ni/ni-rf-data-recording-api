@@ -1,6 +1,6 @@
 ![NI Logo](docs/figures/NI_NEU_API_landing_page.png "NI & NEU API Logo")
 
-# NI RF Data Recording API v1.1.0
+# NI RF Data Recording API v1.2.0
 
 Welcome to RF Data Recording API! The RF Data Recording API is the free and open-source Python-based API to record Real-World RF data sets in an easy and automated way.
 
@@ -15,7 +15,7 @@ The RF Data Recording API has been built based on [UHD](https://github.com/Ettus
 <details>
 <summary>"Click to expand"</summary>
 
-- [NI RF Data Recording API v1.1.0](#ni-rf-data-recording-api-v110)
+- [NI RF Data Recording API v1.2.0](#ni-rf-data-recording-api-v110)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [API Features](#api-features)
@@ -85,7 +85,13 @@ Despite being in the early phase of research for 6G, AI & ML appears to be becom
 Ubuntu 20.04 is used in our test environment. However, you can build UHD on different operating systems. Look to [Building and Installing the USRP Open-Source Toolchain (UHD and GNU Radio) on Linux - Ettus Knowledge Base](https://kb.ettus.com/Building_and_Installing_the_USRP_Open-Source_Toolchain_(UHD_and_GNU_Radio)_on_Linux).
 
 ### Hardware
-To use the NI RF Data Recording API, you need at least one NI RF USRP device (for Tx or Rx only operation mode). The API has been tested on both [NI USRP X310](https://www.ettus.com/all-products/x310-kit/) ([X300/X310 Getting Started Guides](https://kb.ettus.com/X300/X310_Getting_Started_Guides)) and [NI USRP X410](https://www.ettus.com/all-products/usrp-x410/) ([X410 Getting Started Guides](https://kb.ettus.com/USRP_X410_Getting_Started_Guide)). The devices should be connected to single or different host computers based on the API operation mode and the investigated application. The following figure shows the setup of three Tx stations and one Rx Station.   
+To use the NI RF Data Recording API, you need at least one NI RF USRP device (for Tx or Rx only operation mode). The API has been tested on the following devices:
+- [NI USRP X310](https://www.ettus.com/all-products/x310-kit/) ([X300/X310 Getting Started Guides](https://kb.ettus.com/X300/X310_Getting_Started_Guides))
+- [NI USRP X410](https://www.ettus.com/all-products/usrp-x410/) ([X410 Getting Started Guides](https://kb.ettus.com/USRP_X410_Getting_Started_Guide))
+- [NI USRP B210](https://www.ettus.com/all-products/ub210-kit/) ([B2xx Getting Started Guides](https://kb.ettus.com/B200/B210/B200mini/B205mini_Getting_Started_Guides))
+  - Note: RX only
+
+The devices should be connected to single or different host computers based on the API operation mode and the investigated application. The following figure shows the setup of three Tx stations and one Rx Station.   
 ![Hardware](docs/figures/rf_data_recording_setup.png "Hardware Configuration")
 
 The following table presents the required hardware for this configuration (cabled setup).
@@ -202,8 +208,8 @@ Both files should have the same name and different format.
     - Waveform IQ data: `LTE_TDD_DL_20MHz_CC-1_E-UTRA_E-TM3.1a.tdms`
     - Waveform config file: `LTE_TDD_DL_20MHz_CC-1_E-UTRA_E-TM3.1a.rfws`
 - Example for a waveform in MATLAB format: 
-    - Waveform IQ data: `RadarWaveform_BW_2M.mat`
-    - Waveform config file: `RadarWaveform_BW_2M.yaml`
+    - Waveform IQ data: `Radar_Waveform_BW_2M.mat`
+    - Waveform config file: `Radar_Waveform_BW_2M.yaml`
 
 **Note**: The check of PAPR and signal amplitude of the given waveform is not supported by the API yet. The user needs to scale the waveform in advance. The maximum DAC input power is 0 dBFS for sinusoidal signals. It means the maximum peak value of real and Imaginary parts of a complex sample should be between -1 and 1, otherwise a signal clipping will occur. The waveform needs to be scaled down for OFDM signals due to the PAPR. For example, the PAPR of 5G NR signal is around 12 dB. So, the DAC input power should be not larger than -12 dBFS.
 
@@ -362,17 +368,17 @@ The API needs to be executed on each machine independently. The user can use als
 ---
 
 ### RF Replay Data Transmitter
-For Tx only using as a single station, the user can use also the RF Replay Data Transmitter. Assume you would like to replay the 5G NR waveform `NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms`, with the following parameters (frequency = 2 GHz, rate = 30.72 MS/s, gain = 30 dB, USRP IP = 192.168.40.2). 
+For Tx only using as a single station, the user can use also the RF Replay Data Transmitter. Assume you would like to replay the 5G NR waveform `5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms`, with the following parameters (frequency = 2 GHz, rate = 30.72 MS/s, gain = 30 dB, USRP IP = 192.168.40.2). 
 Run the following command if you're using X310:
 
 ```
-python3.9 rf_replay_data_transmitter_usrp_uhd.py --args="type=x300,addr=192.168.40.2,master_clock_rate=184.32e6" --freq=2e9 --rate=30.72e6 --gain=30 --path="waveforms/nr/" --file="NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1" --waveform_format="tdms"
+python3.9 rf_replay_data_transmitter_usrp_uhd.py --args="type=x300,addr=192.168.40.2,master_clock_rate=184.32e6" --freq=2e9 --rate=30.72e6 --gain=30 --path="waveforms/nr/" --file="5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1" --waveform_format="tdms"
 ```
 
 or run the following command if you're using X410:
 
 ```
-python3.9 rf_replay_data_transmitter_usrp_uhd.py --args="type=x4xx,addr=192.168.40.2,master_clock_rate=245.76e6" --freq=2e9 --rate=30.72e6 --gain=30 --path="waveforms/nr/" --file="NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1" --waveform_format="tdms"
+python3.9 rf_replay_data_transmitter_usrp_uhd.py --args="type=x4xx,addr=192.168.40.2,master_clock_rate=245.76e6" --freq=2e9 --rate=30.72e6 --gain=30 --path="waveforms/nr/" --file="5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1" --waveform_format="tdms"
 ```
 
 To stop data transmission, click on the terminal ctrl+c.
@@ -480,6 +486,7 @@ The following tree shows the RF Data Recording API repository structure:
   ├─ CONTRIBUTING.md  - # Guidelines for contributions to this repository
   ├─ License.md       - # MIT License
   ├─ README.md        - # This ReadMe file
+  ├─ requirements.txt - # Python package dependencies
   └─ SECURITY.md      - # Security disclaimer
   ```
 
