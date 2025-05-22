@@ -457,27 +457,30 @@ The figure below shows the spectrogram of received 5G NR, LTE, and Radar signals
 The following tree shows the RF Data Recording API repository structure:
 ``` RF Data Recording API
 # main
-  ├─ build  - # Contain all scripts related to build process
-  ├─ docs   - # API Documentation
-  │  ├─ Getting started guide to setup the system.pdf.
+  ├─ build             - # Contains all scripts related to build process
+  ├─ docs              - # API Documentation
+  │  ├─ Getting started guide to setup the system.pdf
   │  └─ figures
-  ├─ resources  - # For all static resources in the project. For example, images, i.e. spectrogram
-  ├─ src/config - # Templates for all API Configurations and wireless link parameter map dictionary
-  ├─ src/files  - # Contains calibration table and AAKIT table of mmWave antenna array
-  ├─ src/lib    - # RF Data Recording API library
-  ├─ src/tests  - # Contains all tests (test API interfaces, plot spectrogram of Tx waveform, read SigMF metadata)
+  ├─ resources         - # For all static resources in the project. For example, images, i.e. spectrogram
+  ├─ src/config        - # Templates for all API Configurations and wireless link parameter map dictionary
+  ├─ src/files         - # Contains calibration table and AAKIT table of mmWave antenna array
+  ├─ src/lib           - # RF Data Recording API library
+  ├─ src/tests         - # Contains all tests (test API interfaces, plot spectrogram of Tx waveform, read SigMF metadata)
   ├─ src/tlk_core_log  - # Contains log of executing api of mmWave devices 
-  ├─ src/waveforms  - # Contains all waveforms for 5G NR, LTE, Radar and WiFi
-  │  ├─ main_rf_data_recording_api.py   - # Main Script to execute the API in all RF modes, configured via configuration files.
-  │  ├─ rf_data_get_mmwave_devices_config_limitation.py   - # Script to get value limits of mmwave antenna array parameters
-  │  ├─ rf_data_get_tmytek_api.py   - # Script to clone the designated version of driver from GitHub and integrate it.
-  │  ├─ rf_replay_data_transmitter_usrp_uhd.py  - # For Tx only, configured via terminal
-  │  ├─ rf_data_recorder_usrp_uhd.py    - # For Rx only, configured via terminal 
-  │  ├─ rf_data_pre_processing_plot.py  - # Read SigMF metadata and plot time domain and spectrum of recorded IQ data
-  │  └─ rf_data_pre_processing_spectrogram.py   - # Read SigMF metadata and plot spectrogram of recorded IQ data
-  ├─ tools  - # Contain scripts to automate tasks in the project
-  ├─ README.md
-  └─ License.md - # MIT License
+  ├─ src/waveforms     - # Contains all waveforms for 5G NR, LTE, Radar and WiFi
+  │  ├─ main_rf_data_recording_api.py                    - # Main Script to execute the API in all RF modes, configured via configuration files.
+  │  ├─ rf_data_get_mmwave_devices_config_limitation.py  - # Script to get value limits of mmwave antenna array parameters
+  │  ├─ rf_data_get_tmytek_api.py                        - # Script to clone the designated version of driver from GitHub and integrate it.
+  │  ├─ rf_replay_data_transmitter_usrp_uhd.py           - # For Tx only, configured via terminal
+  │  ├─ rf_data_recorder_usrp_uhd.py                     - # For Rx only, configured via terminal 
+  │  ├─ rf_data_pre_processing_plot.py                   - # Read SigMF metadata and plot time domain and spectrum of recorded IQ data
+  │  └─ rf_data_pre_processing_spectrogram.py            - # Read SigMF metadata and plot spectrogram of recorded IQ data
+  ├─ tools            - # Contain scripts to automate tasks in the project
+  ├─ CHANGELOG.txt    - # Contains the version history
+  ├─ CONTRIBUTING.md  - # Guidelines for contributions to this repository
+  ├─ License.md       - # MIT License
+  ├─ README.md        - # This ReadMe file
+  └─ SECURITY.md      - # Security disclaimer
   ```
 
 ***Note**: For mmWave support, after executing the command via [Get the Driver API of mmWave Devices](#get-the-driver-api-of-mmwave-devices), the driver and related dependencies will be copied and integrated to the current RF Data Recording API repository in your local machine.
