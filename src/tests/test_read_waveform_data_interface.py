@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     elif waveform_format == "matlab":
         waveform_path = "waveforms/radar/"
-        waveform_file_name = "RadarWaveform_BW_2M"
+        waveform_file_name = "Radar_Waveform_BW_2M"
         if waveform_path_type == "relative":
             dir_path = os.path.dirname(__file__)
             src_path = os.path.split(dir_path)[0] 

@@ -12,7 +12,7 @@ from nptdms import TdmsFile
 from nptdms import tdms
 
 waveform_path = "waveforms/nr/"
-waveform_file_name = "NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms"
+waveform_file_name = "5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms"
 
 # path to TDMS file
 dir_path = os.path.dirname(__file__)

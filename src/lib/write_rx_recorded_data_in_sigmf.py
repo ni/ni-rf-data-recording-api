@@ -224,7 +224,7 @@ def write_rx_recorded_data_in_sigmf(rx_data, rx_args, txs_args, general_config, 
 
 # Get tx waveform config from file name
 # example:
-#         waveform name: ["NR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms"]},
+#         waveform name: ["5GNR_FR1_DL_FDD_SISO_BW-20MHz_CC-1_SCS-30kHz_Mod-64QAM_OFDM_TM3.1.tdms"]},
 #         ['NR', 'FR1', 'DL', 'FDD', 'SISO', 'BW-20MHz', 'CC-1', 'SCS-30kHz', 'Mod-64QAM', 'OFDM']
 # Note: Function not used anymore
 def get_tx_waveform_config_info(waveform_file_name):
