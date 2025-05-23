@@ -1,0 +1,11 @@
+dash
+dash-daq
+dash-bootstrap-components
+pillow
+torch
+torchvision
+ultralytics
+gitpython
+opencv-python
+seaborn
+tqdm
