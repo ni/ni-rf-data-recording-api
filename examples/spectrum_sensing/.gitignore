@@ -1,0 +1,5 @@
+# Datasets
+datasets/
+
+# Generated config files
+config/config.json
