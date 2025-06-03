@@ -84,16 +84,16 @@ def run_ni_rf_data_recording_api(general_config, txs_config, rxs_config,
     tx1_config = txs_config[0]
     tx2_config = txs_config[1]
     if tx1_config["waveform_file_name"] == "OFF" and tx2_config["waveform_file_name"] == "OFF":
-        default_rf_data_acq_config_file = "config_1Rx.json"
+        default_rf_data_acq_config_file = "config_spectrum_sensing_1Rx.json"
         txs_config = []
     elif tx1_config["waveform_file_name"] != "OFF" and tx2_config["waveform_file_name"] != "OFF":
-        default_rf_data_acq_config_file = "config_2Tx_1Rx.json"
+        default_rf_data_acq_config_file = "config_spectrum_sensing_2Tx_1Rx.json"
     elif tx1_config["waveform_file_name"] == "OFF":
         txs_config = [tx2_config]
-        default_rf_data_acq_config_file = "config_1Tx2_1Rx.json"
+        default_rf_data_acq_config_file = "config_spectrum_sensing_1Tx2_1Rx.json"
     elif tx2_config["waveform_file_name"] == "OFF":
         txs_config = [tx1_config]
-        default_rf_data_acq_config_file = "config_1Tx1_1Rx.json"
+        default_rf_data_acq_config_file = "config_spectrum_sensing_1Tx1_1Rx.json"
     # update default config
     _, updated_rf_data_acq_config_file = update_rf_api_config(
         default_rf_data_acq_config_file, general_config, txs_config, rxs_config,
