@@ -392,7 +392,7 @@ class RFDataRecorderAPI:
             return variations_product
 
         # get hW info of TX Stations
-        num_tx_usrps = int(general_config["num_tx_usrps"])
+        num_tx_usrps = int(general_config["num_tx_usrps"].item())
         if num_tx_usrps > 0:
             # if Tx station is USRP
             variations_product = get_usrp_mboard_info(
@@ -403,7 +403,7 @@ class RFDataRecorderAPI:
                     num_tx_usrps, RFDataRecorderAPI.RFmode[0], variations_product)
 
         # get hW info of RX Stations
-        num_rx_usrps = int(general_config["num_rx_usrps"])
+        num_rx_usrps = int(general_config["num_rx_usrps"].item())
         if num_rx_usrps > 0:
             # if Rx station is USRP
             variations_product = get_usrp_mboard_info(
