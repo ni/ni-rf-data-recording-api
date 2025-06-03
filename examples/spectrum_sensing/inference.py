@@ -25,7 +25,7 @@ if __name__ == "__main__":
     YOLOv5_dir = os.path.join(curr_dir, '../../../yolov5')
     datasets_path = os.path.join(curr_dir, 'datasets/')
 
-    device = 'cpu'  # for CPU use 'cpu', for GPU use '0' or just 0
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     rx_records_path = os.path.join(datasets_path, 'records/')
     spectrogram_folder = os.path.join(datasets_path, 'images/')
     inference_results_folder = os.path.join(datasets_path, 'results/')
