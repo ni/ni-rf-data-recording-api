@@ -48,9 +48,9 @@ def read_config_files(rf_data_acq_config_file: str):
 
 # Check whether dict of config is filled at all
 def check_config_dict(config_dict):
-    if bool(config_dict):
+    if config_dict:
         for key, value in config_dict.items():
-            if not value:
+            if value is None or value == "":
                 raise Exception(f"Config field '{key}' is not filled!")
 
 
