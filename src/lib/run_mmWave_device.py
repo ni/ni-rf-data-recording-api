@@ -14,12 +14,8 @@ from lib.data_format_conversion_lib import str2bool
 try:
     from lib.TLKCoreService import TLKCoreService
     from lib.TMYPublic import DevInterface, RetCode, RFMode, UDState, BeamType, UDM_REF
-except Exception as e:
-    if e.msg.__contains__("No module named \'lib"):
-        print("Please check if you have installed the TMYTek API.")
-        input(" === There is no TMYTek API, do you want to continue? ===") # Just press the keyboard if no need to support mmWave
-    else:
-        raise Exception("ERROR: The TMYTek API can't work, please check pip install -r requirements.txt")
+except ImportError:
+    pass
 
 
 # Define the TLKCore service in singleton for TMYTek devices
