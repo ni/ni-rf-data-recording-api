@@ -23,25 +23,24 @@ if __name__ == "__main__":
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     weights_path = os.path.join(curr_dir, 'model/example.pt')
     YOLOv5_dir = os.path.join(curr_dir, '../../../yolov5')
-    datasets_path = os.path.join(curr_dir, 'datasets/')
-
+    datasets_path = os.path.join(curr_dir, 'datasets')
+    rx_records_path = os.path.join(datasets_path, 'records')
+    spectrogram_folder = os.path.join(datasets_path, 'images')
+    inference_results_folder = os.path.join(datasets_path, 'results')
+    # ------------------------------------------
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    rx_records_path = os.path.join(datasets_path, 'records/')
-    spectrogram_folder = os.path.join(datasets_path, 'images/')
-    inference_results_folder = os.path.join(datasets_path, 'results/')
     figure_size = [8, 12]
     figure_dpi = 100
     image_dims = (620, 925, 3)
     class_list = ['5GNR', 'LTE', 'Radar', '802.11']
     color_list = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (32, 165, 218)]
     line_thickness = 2
-    conf = 0.4
+    confidence = 0.4
     image_size = 640
     delete_analyzed_data = True
 
     # ------------------------------------------
     # ------------- Check paths ----------------
-    # ------------------------------------------
     # ------------------------------------------
     if not os.path.isdir(rx_records_path):
         print("WARNING: The RX records folder does not exist!")
@@ -64,13 +63,13 @@ if __name__ == "__main__":
     model = torch.hub.load(YOLOv5_dir, source='local', model='custom', path=weights_path,
                            force_reload=False, autoshape=True, device=device)
     model.names = class_list
-    model.conf = conf
+    model.conf = confidence
 
     # Ctrl+C causes KeyboardInterrupt to be raised, just catch it outside the loop and ignore it.
     try:
         while True:
             # get list of all sigmf meta data files
-            metadata_filelist = glob.glob(rx_records_path + '*' + '.sigmf-meta')
+            metadata_filelist = glob.glob(rx_records_path + '/*.sigmf-meta')
             # run only if the list is not empty
             if not metadata_filelist:
                 time_stamp_micro_sec = datetime.now().strftime("%Y_%m_%d-%H_%M_%S_%f")
@@ -80,8 +79,8 @@ if __name__ == "__main__":
             else:
                 # sort the files by date/time in ascending order (oldest first)
                 metadata_filelist = sorted(metadata_filelist, key=os.path.getmtime)
-                # pick the oldest file and normalize to posix path
-                metadata_file_path = os.path.normpath(metadata_filelist[0]).replace('\\', '/')
+                # pick the oldest file
+                metadata_file_path = metadata_filelist[0]
 
                 # start time
                 start_time = time.time()
@@ -107,7 +106,7 @@ if __name__ == "__main__":
                             print(colored(f"Error: {e.filename} - {e.strerror}.", "red"))
 
                 # crop image to size
-                filename = metadata_file_path.split('/')[-1].split('-meta')[0] + '.jpg'
+                filename = os.path.split(metadata_file_path)[-1].split('-meta')[0] + '.jpg'
                 source_path = os.path.join(spectrogram_folder, filename)
                 cropped_path = image_cropper.image_cropper_file_based(
                     source_path, spectrogram_folder)

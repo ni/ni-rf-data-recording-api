@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 
 
-def trim(im):
+def trim(im: Image.Image) -> Image.Image:
     bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
     diff = ImageChops.difference(im, bg)
     diff = ImageChops.add(diff, diff, 2.0, -100)
@@ -19,8 +19,8 @@ def trim(im):
         return im.crop(bbox)
 
 
-def image_cropper_file_based(source_path, destination_folder):
-    filename = source_path.split('/')[-1]
+def image_cropper_file_based(source_path: str, destination_folder: str) -> str:
+    filename = os.path.split(source_path)[-1]
     im = Image.open(source_path)
 
     cropped_im = trim(im)
@@ -30,7 +30,7 @@ def image_cropper_file_based(source_path, destination_folder):
     # rotating a image 90 deg counter clockwise
     cropped_im = cropped_im.rotate(270, expand=1)
 
-    cropped_path = os.path.abspath(destination_folder) + '/' + filename
+    cropped_path = os.path.join(os.path.abspath(destination_folder), filename)
     cropped_im.save(cropped_path)
 
     cropped_im.close()
@@ -38,7 +38,7 @@ def image_cropper_file_based(source_path, destination_folder):
     return cropped_path
 
 
-def image_cropper(source_folder, destination_folder):
+def image_cropper(source_folder: str, destination_folder: str):
 
     # check source folder
     if not os.path.isdir(source_folder):
@@ -46,7 +46,7 @@ def image_cropper(source_folder, destination_folder):
 
     # create destination folder if not existing
     if not os.path.isdir(destination_folder):
-        print('Create destination folder: ' + destination_folder)
+        print('Create destination folder:', destination_folder)
         os.makedirs(destination_folder)
 
     # find all files

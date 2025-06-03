@@ -12,6 +12,7 @@ import matplotlib.axes as axes
 import matplotlib.mlab as mlab
 import glob
 import os
+from typing import List
 from sigmf import SigMFFile, sigmffile
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -124,7 +125,8 @@ def plot_spectrogram(
     ax.set_yticks([], [])
 
 
-def spectrogram_creator_file_based(metadata_file_path, spectrogram_folder, figure_size, figure_dpi):
+def spectrogram_creator_file_based(metadata_file_path: str, spectrogram_folder: str,
+                                   figure_size: List[int], figure_dpi: int):
     # load a dataset meta data
     metadata = sigmffile.fromfile(metadata_file_path)
     # Get some metadata and all annotations
@@ -152,35 +154,31 @@ def spectrogram_creator_file_based(metadata_file_path, spectrogram_folder, figur
     # load data set
     dataset = metadata.read_samples().view("complex64").flatten()
 
-    # this_IQ_path = metadata_file_path[:-len(".sigmf-meta")]
-    # this_IQ_path = this_IQ_path + ".sigmf-data"
-    # with open (this_IQ_path,'rb') as handle:
-    # dataset = np.fromfile(handle, dtype=np.complex64)
-
     fig, ax = plt.subplots(figsize=(figure_size[0], figure_size[1]))
     plt.rcParams['figure.dpi'] = figure_dpi
     plt.rcParams['savefig.dpi'] = figure_dpi
 
     plot_spectrogram(ax, dataset, sample_rate=sample_rate, center_freq=0)
-    filename = metadata_file_path.split('/')[-1].split('-meta')[0]
+    filename = os.path.split(metadata_file_path)[-1].split('-meta')[0]
     save_path = os.path.join(spectrogram_folder, filename) + '.jpg'
 
     fig.savefig(save_path)
     plt.close(fig)
 
 
-def spectrogram_creator(dataset_folder, spectrogram_folder, figure_size, figure_dpi):
+def spectrogram_creator(dataset_folder: str, spectrogram_folder: str,
+                        figure_size: List[int], figure_dpi: int):
 
     if not os.path.isdir(dataset_folder):
         raise Exception('ERROR: Dataset_folder is not exist!')
 
     # create spectrogram folder if not existing
     if not os.path.isdir(spectrogram_folder):
-        print('Create spectrogram folder: ' + spectrogram_folder)
+        print('Create spectrogram folder:', spectrogram_folder)
         os.makedirs(spectrogram_folder)
 
     # get list of all sigmf meta data files
-    metadata_filelist = glob.glob(dataset_folder + '*' + '.sigmf-meta')
+    metadata_filelist = glob.glob(dataset_folder + '/*.sigmf-meta')
     # sort the files
     metadata_filelist = sorted(metadata_filelist, key=os.path.getmtime)
 

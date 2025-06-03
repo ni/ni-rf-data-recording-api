@@ -30,9 +30,9 @@ gui_status_update_rate_ms = 100
 gui_fig_update_rate = 800
 
 # *** Paths ***
-datasets_path = os.path.join(curr_dir, 'datasets/')
-rx_recorded_data_path = os.path.join(datasets_path, 'records/')
-inference_results_folder_source = os.path.join(datasets_path, 'results/')
+datasets_path = os.path.join(curr_dir, 'datasets')
+rx_recorded_data_path = os.path.join(datasets_path, 'records')
+inference_results_folder_source = os.path.join(datasets_path, 'results')
 ni_rf_data_recording_api_path = os.path.join(curr_dir, '../../')
 
 # *** Images ***
@@ -278,10 +278,13 @@ def get_gui_config(tx1_freq_GHz, tx1_gain_dB, tx1_waveform,
 def start_selected(n_clicks):
     runFlag = data_recording.get_recording_status()
     if n_clicks > 0 and runFlag is False:
-        print('start_selected n_clicks ', n_clicks)
         print('Start NI RF Data Recording API:')
-        data_recording.run_ni_rf_data_recording_api(
-            general_config_gui, txs_config_gui, rxs_config_gui, ni_rf_data_recording_api_path)
+        try:
+            data_recording.run_ni_rf_data_recording_api(
+                general_config_gui, txs_config_gui, rxs_config_gui, ni_rf_data_recording_api_path)
+        except Exception as e:
+            print('Error in starting RF Data Recording API:', e)
+            raise
     return html.Div([''])
 
 
@@ -290,7 +293,6 @@ def start_selected(n_clicks):
               Input(component_id='stopBtn', component_property='n_clicks'))
 def stop_selected(n_clicks):
     if n_clicks > 0:
-        print('stop_selected n_clicks:', n_clicks)
         data_recording.stop_rf_data_recording_api()
         data_recording.delete_previous_records(
             rx_recorded_data_path, inference_results_folder_source)
@@ -325,7 +327,7 @@ def update_usrp_init_status(n):
               Input(component_id='interval_component_inference', component_property='n_intervals'))
 def update_graph_live(n):
     # get list of all inference results
-    img_result_list = glob.glob(inference_results_folder_source + '*' + '.jpg')
+    img_result_list = glob.glob(inference_results_folder_source + '/*.jpg')
     # run only if the list is not empty
     if not img_result_list or len(img_result_list) < 2:
         fig = Image.open(default_inference_img)
