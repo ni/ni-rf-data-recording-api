@@ -1,9 +1,9 @@
 termcolor
-numpy>=1.23,<2.0.0
-scipy
-matplotlib
-pandas
-pyyaml
-uhd
+numpy>=1.23.5,<2.0.0
+scipy>=1.4.1
+matplotlib>=3.3
+pandas>=1.1.4
+pyyaml>=5.3.1
+uhd; sys_platform=="win32"
 nptdms
 sigmf
