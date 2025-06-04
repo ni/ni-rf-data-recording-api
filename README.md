@@ -1,6 +1,6 @@
 ![NI Logo](docs/figures/NI_NEU_API_landing_page.png "NI & NEU API Logo")
 
-# NI RF Data Recording API v1.2.0
+# NI RF Data Recording API v1.3.0
 
 Welcome to RF Data Recording API! The RF Data Recording API is the free and open-source Python-based API to record Real-World RF data sets in an easy and automated way.
 
@@ -15,7 +15,7 @@ The RF Data Recording API has been built based on [UHD](https://github.com/Ettus
 <details>
 <summary>"Click to expand"</summary>
 
-- [NI RF Data Recording API v1.2.0](#ni-rf-data-recording-api-v110)
+- [NI RF Data Recording API v1.3.0](#ni-rf-data-recording-api-v110)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [API Features](#api-features)
@@ -467,6 +467,7 @@ The following tree shows the RF Data Recording API repository structure:
   ├─ docs              - # API Documentation
   │  ├─ Getting started guide to setup the system.pdf
   │  └─ figures
+  ├─ examples          - # Contains application examples
   ├─ resources         - # For all static resources in the project. For example, images, i.e. spectrogram
   ├─ src/config        - # Templates for all API Configurations and wireless link parameter map dictionary
   ├─ src/files         - # Contains calibration table and AAKIT table of mmWave antenna array
