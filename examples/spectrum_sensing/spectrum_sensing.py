@@ -31,8 +31,8 @@ gui_fig_update_rate = 800
 
 # *** Paths ***
 datasets_path = os.path.join(curr_dir, 'datasets')
-rx_recorded_data_path = os.path.join(datasets_path, 'records')
-inference_results_folder_source = os.path.join(datasets_path, 'results')
+rx_records_path = os.path.join(datasets_path, 'records')
+inference_results_folder = os.path.join(datasets_path, 'results')
 ni_rf_data_recording_api_path = os.path.join(curr_dir, '../../')
 
 # *** Images ***
@@ -246,7 +246,7 @@ def get_gui_config(tx1_freq_GHz, tx1_gain_dB, tx1_waveform,
     global txs_config_gui
     global rxs_config_gui
     general_config_gui = {"nrecords": rx_nrecords,
-                          "rx_recorded_data_path": rx_recorded_data_path}
+                          "rx_recorded_data_path": rx_records_path}
     # Unit conversion
     # TX 1
     tx1_config = {}
@@ -295,7 +295,7 @@ def stop_selected(n_clicks):
     if n_clicks > 0:
         data_recording.stop_rf_data_recording_api()
         data_recording.delete_previous_records(
-            rx_recorded_data_path, inference_results_folder_source)
+            rx_records_path, inference_results_folder)
     return html.Div([''])
 
 
@@ -327,7 +327,7 @@ def update_usrp_init_status(n):
               Input(component_id='interval_component_inference', component_property='n_intervals'))
 def update_graph_live(n):
     # get list of all inference results
-    img_result_list = glob.glob(inference_results_folder_source + '/*.jpg')
+    img_result_list = glob.glob(inference_results_folder + '/*.jpg')
     # run only if the list is not empty
     if not img_result_list or len(img_result_list) < 2:
         fig = Image.open(default_inference_img)
