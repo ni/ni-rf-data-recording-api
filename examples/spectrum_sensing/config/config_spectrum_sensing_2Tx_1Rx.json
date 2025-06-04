@@ -64,7 +64,7 @@
       "rx_recorded_data_path": "datasets/records/",
       "rx_recorded_data_saving_format": "SigMF",
       "nrecords": 2,
-      "dwell_time": 0.0,
+      "dwell_time": 0.5,
       "txs_execution": "parallel",
       "wireless_link_parameter_map": "wireless_link_parameter_map.yaml",
       "enable_console_logging": "True",
