@@ -37,4 +37,3 @@ This example implements a spetrum sensing application using USRP RF hardware, th
 
 * If a GPU with CUDA support is available, it will be used automatically instead of the CPU. Refer to https://pytorch.org/get-started/locally/ for how to enable PyTorch with CUDA support.
 * Additional settings can be changed directly in the Python scripts, e.g. to configure different locations for data files, yolov5, etc.
-* For debugging, it is recommended to enable the developer UI in `spectrum_sensing.py`
