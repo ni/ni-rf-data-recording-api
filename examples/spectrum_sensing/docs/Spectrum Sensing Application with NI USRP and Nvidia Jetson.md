@@ -112,7 +112,7 @@ We will need UHD 4.7 including UHD Python API support which we will build from s
     ```
 - Install dependencies
     ```shell
-    sudo apt-get install autoconf automake build-essential ccache cmake cpufrequtils doxygen ethtool g++ git inetutils-tools libboost-all-dev libncurses5 libncurses5-dev libusb-1.0-0 libusb-1.0-0-dev libusb-dev python3-dev python3-mako python3-numpy python3-requests python3-scipy python3-setuptools python3-ruamel.yaml
+    sudo apt-get install autoconf automake build-essential ccache cmake cpufrequtils doxygen ethtool g++ git inetutils-tools libboost-all-dev libncurses5 libncurses5-dev libusb-1.0-0 libusb-1.0-0-dev libusb-dev python3-dev python3-mako python3-numpy python3-requests python3-scipy python3-setuptools python3-ruamel.yaml python3-pip nano
     ```
 - Clone the UHD 4.7 release branch
     ```shell
@@ -263,8 +263,9 @@ To isolate the working environment from the system, we will use a virtual Python
     ```
 - YOLOv5
     ```shell
-    pip install -U gitpython>=3.1.30 matplotlib>=3.3 numpy>=1.23.5 opencv-python>=4.1.1 pillow>=10.3.0 psutil PyYAML>=5.3.1 requests>=2.32.2 scipy>=1.4.1 thop>=0.1.1 tqdm>=4.66.3 ultralytics>=8.2.34 setuptools>=70.0.0
+    pip install -U "gitpython>=3.1.30" "matplotlib>=3.3" "numpy>=1.23.5" "opencv-python>=4.1.1" "pillow>=10.3.0" psutil "PyYAML>=5.3.1" "requests>=2.32.2" "scipy>=1.4.1" "thop>=0.1.1" "tqdm>=4.66.3" "ultralytics>=8.2.34" "setuptools>=70.0.0" "seaborn>=0.11.0"
     ```
+    💡 Note: You might encounter some warnings or errors related to *launchpadlib* and *onnx-graphsurgeon* which can be ignored.
 
 ### YOLOv5 Model
 
@@ -363,7 +364,7 @@ The UI code is in the file located at ***ni-rf-data-recording-api/examples/spect
 - **block_diagram_img**: defines the image shown as system block diagram
   - Change to `RF_Smart_Edge_Node_Block_Diagram.png` for this demonstration
 - **system_diagram_img**: defines the image shown as data block diagram
-  - Change to `RF_Smart_Edge_System_Block_Diagram_B210.png` or `RF_Smart_Edge_Node_System_Diagram_B206.png` depending on the used hardware
+  - Change to `RF_Smart_Edge_Node_System_Diagram_B210.png` or `RF_Smart_Edge_Node_System_Diagram_B206.png` depending on the used hardware
 - **gui_status_update_rate_ms**: use this setting to change the rate of status updates
 - **gui_fig_update_rate**: use this setting to change the rate with which new results are shown to align with system performance
 - **datasets_path**: points to the parent folder for the configured location of data records and results
@@ -376,6 +377,14 @@ The UI code is in the file located at ***ni-rf-data-recording-api/examples/spect
 The demo consists of two separate Python processes that need to be run in parallel using two terminals. The UI itself runs in a normal browser window at the URL http://127.0.0.1:8050. Note that the following instructions assume that the virtual Python environment is enabled, and the starting folder is the *~/workspace* directory.
 
 **Terminal 1**
+- Change to the workspace folder
+    ```shell
+    cd ~/workspace
+    ```
+- Enable the virtual Python environment
+    ```shell
+    source .venv/bin/activate
+    ```
 - Change to the location of the inference code
     ```shell
     cd ni-rf-data-recording-api/examples/spectrum_sensing
@@ -386,6 +395,14 @@ The demo consists of two separate Python processes that need to be run in parall
     ```
 
 **Terminal 2**
+- Change to the workspace folder
+    ```shell
+    cd ~/workspace
+    ```
+- Enable the virtual Python environment
+    ```shell
+    source .venv/bin/activate
+    ```
 - Change to the location of the UI code
     ```shell
     cd ni-rf-data-recording-api/examples/spectrum_sensing
@@ -536,3 +553,8 @@ Depending on the software state of the X410 device, it might be necessary to upd
     ExecStartPre=/bin/sleep 10
     ```
   - Restart the system
+- UI displays old or corrupted image data
+  - Remove the *dataset* folder and its contents
+    ```shell
+    rm -rf ~/workspace/ni-rf-data-recording-api/examples/spectrum_sensing/datasets/
+    ```
