@@ -89,7 +89,6 @@ To use the NI RF Data Recording API, you need at least one NI RF USRP device (fo
 - [NI USRP X310](https://www.ettus.com/all-products/x310-kit/) ([X300/X310 Getting Started Guides](https://kb.ettus.com/X300/X310_Getting_Started_Guides))
 - [NI USRP X410](https://www.ettus.com/all-products/usrp-x410/) ([X410 Getting Started Guides](https://kb.ettus.com/USRP_X410_Getting_Started_Guide))
 - [NI USRP B210](https://www.ettus.com/all-products/ub210-kit/) ([B2xx Getting Started Guides](https://kb.ettus.com/B200/B210/B200mini/B205mini_Getting_Started_Guides))
-  - Note: RX only
 
 The devices should be connected to single or different host computers based on the API operation mode and the investigated application. The following figure shows the setup of three Tx stations and one Rx Station.   
 ![Hardware](docs/figures/rf_data_recording_setup.png "Hardware Configuration")
@@ -503,9 +502,10 @@ Note: Maintenance of this Git repository will be done on best effort basis.
 ---
 
 ## Known Issues and Limitations
--	Tested on both X310 and X410 USRP only
+-	Tested on B2xx, X310 and X410 USRP as transmitter
 -   For the mmWave support, tested on BBox One 5G and BBox Lite 5G as the beam former, UD Box 5G as the UDC based on the one Tx station and one Rx station. 
 -   Currently, the software mmWave driver version used in the example has restrictions on the calling path, i.e., the relative path cannot be changed, which depends on the updates and iterations by the driver developer.
+-   For B2xx as transmitter, it can limit to 4G and 5G tdms waveform only used. It will not work for Wifi waveform.
 
 ---
 
