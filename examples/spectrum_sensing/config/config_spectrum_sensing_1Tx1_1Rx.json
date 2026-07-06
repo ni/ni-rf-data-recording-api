@@ -77,7 +77,7 @@
     },
     "transmitters_config": [
       {
-        "RFmode": "Tx", "type": "x4xx", "name": "jan-x4xx-323F762",
+        "RFmode": "Tx", "type": "b200", "name": "B206i",
         "Parameters": {
           "freq":           {"SeqType": "single",    "Values": 3.6e9},
           "lo_offset":      {"SeqType": "single",   "Values": -20.0e6},
@@ -105,7 +105,7 @@
       "tx_duc_id":        {"SeqType": "list",     "Values": [0]}},
     "receivers_config": [
       {
-        "RFmode": "Rx", "type": "b200",
+        "RFmode": "Rx", "type": "b200", "serial": "345D72B",
         "recv_frame_size": 16360, "num_recv_frames": 32,
         "Parameters": {
             "freq":         {"SeqType": "single",    "Values": 3.6e9},

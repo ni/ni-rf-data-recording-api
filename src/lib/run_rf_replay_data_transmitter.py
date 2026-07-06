@@ -37,9 +37,17 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError("Boolean value expected.")
-
-
+#siddhant_code_change
 def rf_replay_data_transmitter(args):
+    
+    print("HW TYPE =", args.hw_type)
+    if "B" in str(args.hw_type).upper():
+        return rf_b2xx_data_transmitter(args)
+    else:
+        return rf_replay_data_transmitter_rfnoc(args)
+
+#siddhant_code_change
+def rf_replay_data_transmitter_rfnoc(args):
     """
     Run Tx waveform playback
     """
@@ -315,3 +323,257 @@ def rf_replay_data_transmitter(args):
 
     print("Letting device settle...")
     time.sleep(0.05)  # sleep for 50ms
+
+#siddhant_code_change
+def rf_b2xx_data_transmitter(args):
+    """
+    Run Tx waveform playback using MultiUSRP (B2xx devices)
+    """
+
+    # ============================================================
+    # Run mmWave devices first if exist
+    # ============================================================
+    if args.enable_mmwave:
+        mmwave_up_down_converter_parameters = args.mmwave_up_down_converter_parameters
+        mmwave_antenna_array_parameters = args.mmwave_antenna_array_parameters
+        run_mmWave_device.start_ud_execution(
+            mmwave_up_down_converter_parameters
+        )
+        run_mmWave_device.start_beamformer(
+            mmwave_antenna_array_parameters
+        )
+
+    print("")
+    print("===================================")
+    print("Using B2xx MultiUSRP TX Backend")
+    print("===================================")
+
+    # ============================================================
+    # Create USRP
+    # ============================================================
+    print("Creating MultiUSRP with args:", args.args)
+
+    usrp = uhd.usrp.MultiUSRP(args.args)
+
+    # ============================================================
+    # Load waveform
+    # ============================================================
+    print("")
+    print("Reading waveform...")
+
+    tx_rate = args.rate
+
+    if args.waveform_format == "tdms":
+
+        tx_data_complex, waveform_IQ_rate = (
+            read_waveform_data_interface.read_waveform_data_tdms(
+                args.waveform_path,
+                args.waveform_file_name
+            )
+        )
+
+        tx_rate = waveform_IQ_rate
+
+        print(
+            f"TDMS IQ Rate : "
+            f"{tx_rate/1e6:.3f} Msps"
+        )
+
+    elif args.waveform_format == "matlab_ieee":
+
+        tx_data_complex = (
+            read_waveform_data_interface.read_waveform_data_matlab_ieee(
+                args.waveform_path,
+                args.waveform_file_name
+            )
+        )
+
+    elif args.waveform_format == "matlab":
+
+        tx_data_complex = (
+            read_waveform_data_interface.read_waveform_data_matlab(
+                args.waveform_path,
+                args.waveform_file_name
+            )
+        )
+
+    else:
+        raise Exception(
+            "ERROR: Unknown or not supported waveform format."
+        )
+
+    print("IQ Samples:", len(tx_data_complex))
+
+    # ============================================================
+    # Configure TX
+    # ============================================================
+    try:
+        usrp.set_clock_source(args.clock_reference)
+    except Exception:
+        pass
+
+    print(
+        f"Requesting TX Rate: "
+        f"{tx_rate/1e6:.3f} Msps"
+    )
+
+    usrp.set_tx_rate(tx_rate)
+
+    print(
+        f"Actual TX Rate: "
+        f"{usrp.get_tx_rate()/1e6:.3f} Msps"
+    )
+
+    print(
+        f"Requesting TX Frequency: "
+        f"{args.freq/1e6:.3f} MHz"
+    )
+
+    if str2bool(args.enable_lo_offset):
+
+        tune_request = uhd.types.TuneRequest(
+            args.freq,
+            args.lo_offset
+        )
+
+        usrp.set_tx_freq(
+            tune_request,
+            args.radio_chan
+        )
+
+    else:
+
+        usrp.set_tx_freq(
+            args.freq,
+            args.radio_chan
+        )
+
+    try:
+        print(
+            f"Actual TX Frequency: "
+            f"{usrp.get_tx_freq(args.radio_chan)/1e6:.3f} MHz"
+        )
+    except Exception:
+        pass
+
+    print(f"Requesting TX Gain: {args.gain} dB")
+
+    usrp.set_tx_gain(
+        args.gain,
+        args.radio_chan
+    )
+
+    try:
+        print(
+            f"Actual TX Gain: "
+            f"{usrp.get_tx_gain(args.radio_chan)} dB"
+        )
+    except Exception:
+        pass
+
+    try:
+
+        usrp.set_tx_bandwidth(
+            args.bandwidth,
+            args.radio_chan
+        )
+
+        print(
+            f"Actual TX Bandwidth: "
+            f"{usrp.get_tx_bandwidth(args.radio_chan)/1e6:.3f} MHz"
+        )
+
+    except Exception:
+        print("Bandwidth configuration skipped")
+
+    try:
+
+        usrp.set_tx_antenna(
+            args.antenna,
+            args.radio_chan
+        )
+
+        print(
+            f"Actual TX Antenna: "
+            f"{usrp.get_tx_antenna(args.radio_chan)}"
+        )
+
+    except Exception:
+        print("Antenna configuration skipped")
+
+    time.sleep(0.1)
+
+    # ============================================================
+    # Repeat waveform
+    # same idea as your standalone script
+    # ============================================================
+    tx_data_complex = np.tile(
+        tx_data_complex,
+        50
+    )
+
+    duration = len(tx_data_complex) / tx_rate
+
+    print("Repeated Samples:", len(tx_data_complex))
+    print("Waveform Duration:", duration)
+
+    tx_channels = [args.radio_chan]
+
+    # ============================================================
+    # Start RX acquisition
+    # ============================================================
+    sync_settings.start_rx_data_acquisition_called = True
+
+    print("")
+    print("Starting Continuous Transmission")
+
+    try:
+
+        first_run = True
+
+        while not sync_settings.stop_tx_signal_called:
+
+            if first_run:
+
+                tx_start_time = (
+                    usrp.get_time_now()
+                    + uhd.types.TimeSpec(0.2)
+                )
+
+                first_run = False
+
+            else:
+
+                tx_start_time = None
+
+            usrp.send_waveform(
+                tx_data_complex,
+                duration,
+                args.freq,
+                tx_rate,
+                tx_channels,
+                args.gain,
+                tx_start_time,
+            )
+
+    except Exception as ex:
+
+        print("TX Error:", ex)
+
+    print("Stopping transmission...")
+
+    # ============================================================
+    # mmWave cleanup
+    # ============================================================
+    if args.enable_mmwave:
+
+        run_mmWave_device.deinit_mmwave_device(
+            mmwave_up_down_converter_parameters.serial_number
+        )
+
+        run_mmWave_device.deinit_mmwave_device(
+            mmwave_antenna_array_parameters.serial_number
+        )
+
+    print("Letting device settle...")
+    time.sleep(0.05)
