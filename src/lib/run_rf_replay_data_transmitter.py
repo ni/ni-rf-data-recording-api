@@ -42,11 +42,11 @@ def rf_replay_data_transmitter(args):
     
     print("HW TYPE =", args.hw_type)
     if "B" in str(args.hw_type).upper():
-        return rf_b2xx_data_transmitter(args)
+        return rf_multiusrp_data_transmitter(args)
     else:
         return rf_replay_data_transmitter_rfnoc(args)
 
-#siddhant_code_change
+#Code to handle all USRP having FPGA access so as to use Replay block feature
 def rf_replay_data_transmitter_rfnoc(args):
     """
     Run Tx waveform playback
@@ -324,8 +324,8 @@ def rf_replay_data_transmitter_rfnoc(args):
     print("Letting device settle...")
     time.sleep(0.05)  # sleep for 50ms
 
-#siddhant_code_change
-def rf_b2xx_data_transmitter(args):
+#Code to handle all B-series usrp having no access to FPGA and use MultiUSRP API for Tx waveform playback
+def rf_multiusrp_data_transmitter(args):
     """
     Run Tx waveform playback using MultiUSRP (B2xx devices)
     """
