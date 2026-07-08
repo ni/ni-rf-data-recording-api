@@ -330,187 +330,128 @@ def rf_multiusrp_data_transmitter(args):
     Run Tx waveform playback using MultiUSRP (B2xx devices)
     """
 
-    # ============================================================
-    # Run mmWave devices first if exist
-    # ============================================================
+    # Run mmwave devices first if exist
     if args.enable_mmwave:
         mmwave_up_down_converter_parameters = args.mmwave_up_down_converter_parameters
         mmwave_antenna_array_parameters = args.mmwave_antenna_array_parameters
-        run_mmWave_device.start_ud_execution(
-            mmwave_up_down_converter_parameters
-        )
-        run_mmWave_device.start_beamformer(
-            mmwave_antenna_array_parameters
-        )
+
+        run_mmWave_device.start_ud_execution(mmwave_up_down_converter_parameters)
+        run_mmWave_device.start_beamformer(mmwave_antenna_array_parameters)
 
     print("")
-    print("===================================")
     print("Using B2xx MultiUSRP TX Backend")
-    print("===================================")
 
-    # ============================================================
+    # ************************************************************************
     # Create USRP
-    # ============================================================
+    # ************************************************************************
     print("Creating MultiUSRP with args:", args.args)
 
     usrp = uhd.usrp.MultiUSRP(args.args)
 
-    # ============================================================
-    # Load waveform
-    # ============================================================
+    # ************************************************************************
+    # Read waveform
+    # ************************************************************************
     print("")
     print("Reading waveform...")
 
     tx_rate = args.rate
 
     if args.waveform_format == "tdms":
-
-        tx_data_complex, waveform_IQ_rate = (
-            read_waveform_data_interface.read_waveform_data_tdms(
-                args.waveform_path,
-                args.waveform_file_name
-            )
+        tx_data_complex, waveform_IQ_rate = read_waveform_data_interface.read_waveform_data_tdms(
+            args.waveform_path,
+            args.waveform_file_name,
         )
 
-        tx_rate = waveform_IQ_rate
+        if args.rate != waveform_IQ_rate:
+            print("Note:The IQ Rate based on TDMS Waveform property should be: ", waveform_IQ_rate)
 
-        print(
-            f"TDMS IQ Rate : "
-            f"{tx_rate/1e6:.3f} Msps"
-        )
+        print(f"TDMS IQ Rate : {tx_rate / 1e6:.3f} Msps")
 
     elif args.waveform_format == "matlab_ieee":
-
-        tx_data_complex = (
-            read_waveform_data_interface.read_waveform_data_matlab_ieee(
-                args.waveform_path,
-                args.waveform_file_name
-            )
+        tx_data_complex = read_waveform_data_interface.read_waveform_data_matlab_ieee(
+            args.waveform_path,
+            args.waveform_file_name,
         )
 
     elif args.waveform_format == "matlab":
-
-        tx_data_complex = (
-            read_waveform_data_interface.read_waveform_data_matlab(
-                args.waveform_path,
-                args.waveform_file_name
-            )
+        tx_data_complex = read_waveform_data_interface.read_waveform_data_matlab(
+            args.waveform_path,
+            args.waveform_file_name,
         )
 
     else:
-        raise Exception(
-            "ERROR: Unknown or not supported waveform format."
-        )
+        raise Exception("ERROR: Unknown or not supported waveform format.")
 
     print("IQ Samples:", len(tx_data_complex))
 
-    # ============================================================
+    # ************************************************************************
     # Configure TX
-    # ============================================================
+    # ************************************************************************
+    print("")
+    print("Setting up TX...")
+
     try:
         usrp.set_clock_source(args.clock_reference)
     except Exception:
         pass
 
-    print(
-        f"Requesting TX Rate: "
-        f"{tx_rate/1e6:.3f} Msps"
-    )
-
+    print(f"Requesting TX Rate: {tx_rate / 1e6:.3f} Msps")
     usrp.set_tx_rate(tx_rate)
 
-    print(
-        f"Actual TX Rate: "
-        f"{usrp.get_tx_rate()/1e6:.3f} Msps"
-    )
+    print(f"Actual TX Rate: {usrp.get_tx_rate() / 1e6:.3f} Msps")
 
-    print(
-        f"Requesting TX Frequency: "
-        f"{args.freq/1e6:.3f} MHz"
-    )
+    print(f"Requesting TX Frequency: {args.freq / 1e6:.3f} MHz")
 
     if str2bool(args.enable_lo_offset):
-
-        tune_request = uhd.types.TuneRequest(
-            args.freq,
-            args.lo_offset
-        )
-
-        usrp.set_tx_freq(
-            tune_request,
-            args.radio_chan
-        )
-
+        tune_request = uhd.types.TuneRequest(args.freq, args.lo_offset)
+        usrp.set_tx_freq(tune_request, args.radio_chan)
     else:
-
-        usrp.set_tx_freq(
-            args.freq,
-            args.radio_chan
-        )
+        usrp.set_tx_freq(args.freq, args.radio_chan)
 
     try:
         print(
             f"Actual TX Frequency: "
-            f"{usrp.get_tx_freq(args.radio_chan)/1e6:.3f} MHz"
+            f"{usrp.get_tx_freq(args.radio_chan) / 1e6:.3f} MHz"
         )
     except Exception:
         pass
 
     print(f"Requesting TX Gain: {args.gain} dB")
 
-    usrp.set_tx_gain(
-        args.gain,
-        args.radio_chan
-    )
+    usrp.set_tx_gain(args.gain, args.radio_chan)
 
     try:
-        print(
-            f"Actual TX Gain: "
-            f"{usrp.get_tx_gain(args.radio_chan)} dB"
-        )
+        print(f"Actual TX Gain: {usrp.get_tx_gain(args.radio_chan)} dB")
     except Exception:
         pass
 
     try:
-
-        usrp.set_tx_bandwidth(
-            args.bandwidth,
-            args.radio_chan
-        )
+        usrp.set_tx_bandwidth(args.bandwidth, args.radio_chan)
 
         print(
             f"Actual TX Bandwidth: "
-            f"{usrp.get_tx_bandwidth(args.radio_chan)/1e6:.3f} MHz"
+            f"{usrp.get_tx_bandwidth(args.radio_chan) / 1e6:.3f} MHz"
         )
-
     except Exception:
         print("Bandwidth configuration skipped")
 
     try:
-
-        usrp.set_tx_antenna(
-            args.antenna,
-            args.radio_chan
-        )
+        usrp.set_tx_antenna(args.antenna, args.radio_chan)
 
         print(
             f"Actual TX Antenna: "
             f"{usrp.get_tx_antenna(args.radio_chan)}"
         )
-
     except Exception:
         print("Antenna configuration skipped")
 
-    time.sleep(0.1)
+    # Allow for some setup time
+    time.sleep(100e-3)
 
-    # ============================================================
-    # Repeat waveform
-    # same idea as your standalone script
-    # ============================================================
-    tx_data_complex = np.tile(
-        tx_data_complex,
-        50
-    )
+    # ************************************************************************
+    # Prepare waveform
+    # ************************************************************************
+    tx_data_complex = np.tile(tx_data_complex, 50)
 
     duration = len(tx_data_complex) / tx_rate
 
@@ -519,31 +460,23 @@ def rf_multiusrp_data_transmitter(args):
 
     tx_channels = [args.radio_chan]
 
-    # ============================================================
-    # Start RX acquisition
-    # ============================================================
+    # ************************************************************************
+    # Start continuous transmission
+    # ************************************************************************
     sync_settings.start_rx_data_acquisition_called = True
 
     print("")
     print("Starting Continuous Transmission")
 
     try:
-
         first_run = True
 
-        while not sync_settings.stop_tx_signal_called:
+        while sync_settings.stop_tx_signal_called == False:
 
             if first_run:
-
-                tx_start_time = (
-                    usrp.get_time_now()
-                    + uhd.types.TimeSpec(0.2)
-                )
-
+                tx_start_time = usrp.get_time_now() + uhd.types.TimeSpec(0.2)
                 first_run = False
-
             else:
-
                 tx_start_time = None
 
             usrp.send_waveform(
@@ -557,16 +490,14 @@ def rf_multiusrp_data_transmitter(args):
             )
 
     except Exception as ex:
-
         print("TX Error:", ex)
 
     print("Stopping transmission...")
 
-    # ============================================================
-    # mmWave cleanup
-    # ============================================================
+    # ************************************************************************
+    # Stop mmwave devices if exist
+    # ************************************************************************
     if args.enable_mmwave:
-
         run_mmWave_device.deinit_mmwave_device(
             mmwave_up_down_converter_parameters.serial_number
         )
