@@ -1,6 +1,12 @@
 Changelog - NI RF Data Recording API
 
 ======================
+v1.4.0        10.07.26
+======================
+
+- support B2xx as transmitter using MultiUSRP API
+
+======================
 v1.3.0        06.06.25
 ======================
 
