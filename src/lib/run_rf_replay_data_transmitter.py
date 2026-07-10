@@ -449,7 +449,7 @@ def rf_multiusrp_data_transmitter(args):
     # ************************************************************************
     target_duration_s = 0.5
     repetition = max(1, int(np.ceil(target_duration_s * tx_rate / len(tx_data_complex))))
-    tx_data_complex = np.tile(tx_data_complex, repetition)
+    tx_data_complex = np.tile(tx_data_complex.astype(np.complex64), repetition)
 
     duration = len(tx_data_complex) / tx_rate
 
