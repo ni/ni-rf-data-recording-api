@@ -14,14 +14,10 @@ TX Waveform Playback
 #
 # Pre-requests: Install UHD with Python API enabled
 #
-import sys
-import signal
 import time
 import argparse
 import numpy as np
 import uhd
-from nptdms import TdmsFile
-import scipy.io
 
 # import other functions
 from lib import read_waveform_data_interface, run_mmWave_device
@@ -37,16 +33,21 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError("Boolean value expected.")
-#siddhant_code_change
+
+# Main TX waveform playback entry point.
 def rf_replay_data_transmitter(args):
+    """
+    Run Tx waveform playback based on USRP type.
     
+    If USRP is B-series (B210, B206, ...), use MultiUSRP API, else use RFNoC API
+    """
     print("HW TYPE =", args.hw_type)
     if "B" in str(args.hw_type).upper():
         return rf_multiusrp_data_transmitter(args)
     else:
         return rf_replay_data_transmitter_rfnoc(args)
 
-#Code to handle all USRP having FPGA access so as to use Replay block feature
+# Code to handle all USRP having FPGA access so as to use Replay block feature
 def rf_replay_data_transmitter_rfnoc(args):
     """
     Run Tx waveform playback
@@ -324,10 +325,10 @@ def rf_replay_data_transmitter_rfnoc(args):
     print("Letting device settle...")
     time.sleep(0.05)  # sleep for 50ms
 
-#Code to handle all B-series usrp having no access to FPGA and use MultiUSRP API for Tx waveform playback
+# Code to handle all B-series USRP having no access to FPGA and use MultiUSRP API instead
 def rf_multiusrp_data_transmitter(args):
     """
-    Run Tx waveform playback using MultiUSRP (B2xx devices)
+    Run Tx waveform playback using MultiUSRP
     """
 
     # Run mmwave devices first if exist
@@ -339,13 +340,12 @@ def rf_multiusrp_data_transmitter(args):
         run_mmWave_device.start_beamformer(mmwave_antenna_array_parameters)
 
     print("")
-    print("Using B2xx MultiUSRP TX Backend")
+    print("Using MultiUSRP TX Backend")
 
     # ************************************************************************
     # Create USRP
     # ************************************************************************
     print("Creating MultiUSRP with args:", args.args)
-
     usrp = uhd.usrp.MultiUSRP(args.args)
 
     # ************************************************************************
@@ -397,7 +397,6 @@ def rf_multiusrp_data_transmitter(args):
 
     print(f"Requesting TX Rate: {tx_rate / 1e6:.3f} Msps")
     usrp.set_tx_rate(tx_rate)
-
     print(f"Actual TX Rate: {usrp.get_tx_rate() / 1e6:.3f} Msps")
 
     print(f"Requesting TX Frequency: {args.freq / 1e6:.3f} MHz")
@@ -417,7 +416,6 @@ def rf_multiusrp_data_transmitter(args):
         pass
 
     print(f"Requesting TX Gain: {args.gain} dB")
-
     usrp.set_tx_gain(args.gain, args.radio_chan)
 
     try:
@@ -427,7 +425,6 @@ def rf_multiusrp_data_transmitter(args):
 
     try:
         usrp.set_tx_bandwidth(args.bandwidth, args.radio_chan)
-
         print(
             f"Actual TX Bandwidth: "
             f"{usrp.get_tx_bandwidth(args.radio_chan) / 1e6:.3f} MHz"
@@ -437,7 +434,6 @@ def rf_multiusrp_data_transmitter(args):
 
     try:
         usrp.set_tx_antenna(args.antenna, args.radio_chan)
-
         print(
             f"Actual TX Antenna: "
             f"{usrp.get_tx_antenna(args.radio_chan)}"
@@ -448,9 +444,9 @@ def rf_multiusrp_data_transmitter(args):
     # Allow for some setup time
     time.sleep(100e-3)
 
-    # ============================================================
-    # Repeat waveform to minimum 0.5s to avoid TX loop congestion
-    # ============================================================
+    # ************************************************************************
+    # Repeat waveform to a minimum of 0.5s to avoid TX loop congestion
+    # ************************************************************************
     target_duration_s = 0.5
     repetition = max(1, int(np.ceil(target_duration_s * tx_rate / len(tx_data_complex))))
     tx_data_complex = np.tile(tx_data_complex, repetition)
