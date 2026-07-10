@@ -502,11 +502,10 @@ Note: Maintenance of this Git repository will be done on best effort basis.
 ---
 
 ## Known Issues and Limitations
--	Tested on  X310 and X410 as transmitter only.
--   B210, B205mini, B206mini were tested as transmitter as well as receiver.
--   For the mmWave support, tested on BBox One 5G and BBox Lite 5G as the beam former, UD Box 5G as the UDC based on the one Tx station and one Rx station. 
--   Currently, the software mmWave driver version used in the example has restrictions on the calling path, i.e., the relative path cannot be changed, which depends on the updates and iterations by the driver developer.
--   For B2xx as transmitter, additional performance limitations might apply depending on signal bandwidth and host capabilities.
+- Tested on X310 and X410 USRP, as well as B210, B205mini and B206mini.
+- For the mmWave support, tested on BBox One 5G and BBox Lite 5G as the beam former, UD Box 5G as the UDC based on the one Tx station and one Rx station. 
+- Currently, the software mmWave driver version used in the example has restrictions on the calling path, i.e., the relative path cannot be changed, which depends on the updates and iterations by the driver developer.
+- For B2xx as transmitter, additional performance limitations might apply depending on signal bandwidth and host capabilities.
 
 ---
 
