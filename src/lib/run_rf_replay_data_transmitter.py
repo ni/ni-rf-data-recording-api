@@ -448,10 +448,12 @@ def rf_multiusrp_data_transmitter(args):
     # Allow for some setup time
     time.sleep(100e-3)
 
-    # ************************************************************************
-    # Prepare waveform
-    # ************************************************************************
-    tx_data_complex = np.tile(tx_data_complex, 50)
+    # ============================================================
+    # Repeat waveform to minimum 0.5s to avoid TX loop congestion
+    # ============================================================
+    target_duration_s = 0.5
+    repetition = max(1, int(np.ceil(target_duration_s * tx_rate / len(tx_data_complex))))
+    tx_data_complex = np.tile(tx_data_complex, repetition)
 
     duration = len(tx_data_complex) / tx_rate
 
